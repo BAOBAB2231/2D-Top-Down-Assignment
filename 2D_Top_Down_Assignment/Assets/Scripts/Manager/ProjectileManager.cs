@@ -1,16 +1,24 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProjectileManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private static ProjectileManager instance;
+
+    public static ProjectileManager Instance { get { return instance; } }
+
+    [SerializeField] private GameObject[] projectilePrefabs;
+
+    private void Awake()
     {
-        
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ShootBullet(RangeWeaponHandler rangeWeaponHandler, Vector2 startPosition, Vector2 direction)
     {
-        
+        GameObject origin = projectilePrefabs[rangeWeaponHandler.BulletIndex];
+        GameObject obj = Instantiate(origin, startPosition, Quaternion.identity);
+
+        ProjectileController projectileController = obj.GetComponent<ProjectileController>();
+        projectileController.Init(direction, rangeWeaponHandler);
     }
 }
