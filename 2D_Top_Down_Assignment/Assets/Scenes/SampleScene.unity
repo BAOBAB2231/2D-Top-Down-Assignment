@@ -3249,6 +3249,8 @@ GameObject:
   - component: {fileID: 1784070604}
   - component: {fileID: 1784070607}
   - component: {fileID: 1784070608}
+  - component: {fileID: 1784070609}
+  - component: {fileID: 1784070610}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3360,6 +3362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRenderer: {fileID: 579758958}
   weaponPivot: {fileID: 1301658876}
+  WeaponPrefab: {fileID: 6298522926540185966, guid: e944849a1a340564f9c7be58d1bb3a15, type: 3}
 --- !u!114 &1784070608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3372,6 +3375,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e316ab2f7fb38124f82cfcea62a76e02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1784070609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784070603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1305d621400775144ace9174b810ad86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 10
+  speed: 3
+--- !u!114 &1784070610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784070603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d444f2f5e7388814f915e73aaf133a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthChangeDelay: 0.5
 --- !u!1 &1855576771
 GameObject:
   m_ObjectHideFlags: 0
