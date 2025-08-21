@@ -3458,6 +3458,16 @@ MonoBehaviour:
   characterRenderer: {fileID: 579758958}
   weaponPivot: {fileID: 1301658876}
   WeaponPrefab: {fileID: 6298522926540185966, guid: e944849a1a340564f9c7be58d1bb3a15, type: 3}
+  useAutoAttack: 1
+  autoAttackRange: 10
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  lineOfSightMask:
+    serializedVersion: 2
+    m_Bits: 256
+  scanInterval: 0.15
+  keepTargetDuration: 0.5
 --- !u!114 &1784070608
 MonoBehaviour:
   m_ObjectHideFlags: 0
