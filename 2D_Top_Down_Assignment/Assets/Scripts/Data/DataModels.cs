@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class MonsterRecord
@@ -22,10 +23,8 @@ public class MonsterRecord
     public int MinExp;
     public int MaxExp;
 
-    // JSON이 [20000,30003] 형태면 그대로 파싱됨
-    // 혹시 문자열 "20000,30003" 으로 올 수도 있어 대비용 필드
-    public int[] DropItem;
-    public string DropItemStr;
+    public int[] DropItem;     // [20000,30003]
+    public string DropItemStr; // "20000, 30003" 같은 CSV가 올 때 대비
 }
 
 [Serializable]
@@ -52,14 +51,37 @@ public class ItemRecord
     public int Status;
 }
 
+/* ---------- 루트 래퍼: 다양한 키 이름 모두 수용 ---------- */
+
 [Serializable]
 public class MonsterTable
 {
-    public List<MonsterRecord> items = new List<MonsterRecord>();
+    // 흔한 패턴들
+    public List<MonsterRecord> items;
+    public List<MonsterRecord> Items;
+    public List<MonsterRecord> monster;
+    public List<MonsterRecord> Monster;
+    public List<MonsterRecord> monsters;
+    public List<MonsterRecord> Monsters;
+
+    public List<MonsterRecord> GetList()
+    {
+        return items ?? Items ?? monster ?? Monster ?? monsters ?? Monsters
+               ?? new List<MonsterRecord>();
+    }
 }
 
 [Serializable]
 public class ItemTable
 {
-    public List<ItemRecord> items = new List<ItemRecord>();
+    public List<ItemRecord> items;
+    public List<ItemRecord> Items;
+    public List<ItemRecord> item;
+    public List<ItemRecord> Item;
+
+    public List<ItemRecord> GetList()
+    {
+        return items ?? Items ?? item ?? Item
+               ?? new List<ItemRecord>();
+    }
 }

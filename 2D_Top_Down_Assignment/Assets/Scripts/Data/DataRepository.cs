@@ -12,6 +12,7 @@ public class DataRepository : MonoBehaviour
     [SerializeField] private string monsterResourcePath = "Data/Monster";
     [SerializeField] private string itemResourcePath = "Data/Item";
 
+    [Header("StreamingAssets 상대 경로 (확장자 포함)")]
     [SerializeField] private string monsterStreamingPath = "Data/Monster.json";
     [SerializeField] private string itemStreamingPath = "Data/Item.json";
 
@@ -32,7 +33,6 @@ public class DataRepository : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
         LoadAll();
     }
 
@@ -42,20 +42,19 @@ public class DataRepository : MonoBehaviour
         monsterById.Clear(); itemById.Clear();
 
         // ---- Monster ----
-        MonsterTable mTable = null;
+        MonsterTable mTable;
         bool mOk = loadFromResources
             ? DataLoader.TryLoadFromResources<MonsterTable>(monsterResourcePath, out mTable)
             : DataLoader.TryLoadFromStreamingAssets<MonsterTable>(monsterStreamingPath, out mTable);
 
-        if (mOk && mTable != null && mTable.items != null)
+        if (mOk && mTable != null)
         {
-            DataLoader.FixupDropItems(mTable.items);
-            monsters.AddRange(mTable.items);
+            var list = mTable.GetList();
+            DataLoader.FixupDropItems(list);
+            monsters.AddRange(list);
             foreach (var m in monsters)
-            {
                 if (!monsterById.ContainsKey(m.MonsterID))
                     monsterById.Add(m.MonsterID, m);
-            }
         }
         else
         {
@@ -63,19 +62,18 @@ public class DataRepository : MonoBehaviour
         }
 
         // ---- Item ----
-        ItemTable iTable = null;
+        ItemTable iTable;
         bool iOk = loadFromResources
             ? DataLoader.TryLoadFromResources<ItemTable>(itemResourcePath, out iTable)
             : DataLoader.TryLoadFromStreamingAssets<ItemTable>(itemStreamingPath, out iTable);
 
-        if (iOk && iTable != null && iTable.items != null)
+        if (iOk && iTable != null)
         {
-            items.AddRange(iTable.items);
+            var list = iTable.GetList();
+            items.AddRange(list);
             foreach (var it in items)
-            {
                 if (!itemById.ContainsKey(it.ItemID))
                     itemById.Add(it.ItemID, it);
-            }
         }
         else
         {
