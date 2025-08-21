@@ -306,5 +306,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterRenderer: {fileID: 8187510814475023449}
   weaponPivot: {fileID: 6064757248022843452}
-  WeaponPrefab: {fileID: 0}
+  WeaponPrefab: {fileID: 6298522926540185966, guid: 12440538c547493409f711ca6bf5e3f5, type: 3}
   followRange: 15
