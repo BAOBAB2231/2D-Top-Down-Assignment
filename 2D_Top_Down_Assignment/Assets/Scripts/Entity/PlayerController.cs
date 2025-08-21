@@ -4,9 +4,11 @@ public class PlayerController : BaseController
 {
     private Camera playerCamera;
 
-    protected override void Start()
+    private GameManager gameManager;
+
+    public void Init(GameManager gameManager)
     {
-        base.Start();
+        this.gameManager = gameManager;
         playerCamera = Camera.main;
     }
 

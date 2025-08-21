@@ -23,14 +23,25 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float timeBetweenSpawns = 0.2f; // 개별 적 생성 간 간격
     [SerializeField] private float timeBetweenWaves = 1f; // 웨이브 간 대기 시간
 
+    GameManager gameManager;
+
+    public void Init(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+    }
+
     // 웨이브 시작 (waveCount: 생성할 적 수)
     public void StartWave(int waveCount)
     {
+        if (waveCount <= 0)
+        {
+            gameManager.EndOfWave();
+            return;
+        }
+
         // 기존 웨이브가 진행 중이면 중단
         if (waveRoutine != null)
             StopCoroutine(waveRoutine);
-
-        // 새 웨이브 시작
         waveRoutine = StartCoroutine(SpawnWave(waveCount));
     }
 
@@ -94,14 +105,6 @@ public class EnemyManager : MonoBehaviour
             Vector3 center = new Vector3(area.x + area.width / 2, area.y + area.height / 2);
             Vector3 size = new Vector3(area.width, area.height);
             Gizmos.DrawCube(center, size);
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartWave(1);
         }
     }
 }
