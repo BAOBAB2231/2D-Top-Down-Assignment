@@ -84,11 +84,11 @@ MonoBehaviour:
   attackRange: 10
   target:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   isOnKnockback: 1
   knockbackPower: 0.1
   knockbackTime: 0.5
-  projectileSpawnPosition: {fileID: 0}
+  projectileSpawnPosition: {fileID: 762244340078737183}
   bulletIndex: 0
   bulletSize: 0.7
   duration: 10
