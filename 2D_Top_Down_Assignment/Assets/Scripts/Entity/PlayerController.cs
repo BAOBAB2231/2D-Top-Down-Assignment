@@ -62,7 +62,6 @@ public class PlayerController : BaseController
             lookDirection = (dir.sqrMagnitude > 0.0001f) ? dir.normalized : Vector2.zero;
             isAttacking = true;
 
-            // 공격 중 이동을 멈추고 싶지 않다면, movementDirection 유지
             if (!allowMoveWhileAttacking)
             {
                 // 사거리 안에 있으면 멈추고 쏘는 스타일

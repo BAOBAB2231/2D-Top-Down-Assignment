@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int currentWaveIndex = 0; // 현재 웨이브 번호
 
+    [SerializeField] private int enemiesPerWaveBase = 10;
+    [SerializeField] private int enemiesPerWaveIncrement = 0;
+
     private EnemyManager enemyManager; // 적 생성 및 관리하는 매니저
 
     private void Awake()
@@ -32,9 +35,11 @@ public class GameManager : MonoBehaviour
 
     void StartNextWave()
     {
-        currentWaveIndex += 1; // 웨이브 인덱스 증가
-        // 5웨이브마다 난이도 증가 (예: 1~4 → 레벨 1, 5~9 → 레벨 2 ...)
-        enemyManager.StartWave(1 + currentWaveIndex / 5);
+        currentWaveIndex += 1;
+
+        int waveCount = enemiesPerWaveBase + enemiesPerWaveIncrement * (currentWaveIndex - 1);
+
+        enemyManager.StartWave(Mathf.Max(1, waveCount));
     }
 
     // 웨이브 종료 후 다음 웨이브 시작

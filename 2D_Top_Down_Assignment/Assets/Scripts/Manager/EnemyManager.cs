@@ -22,6 +22,10 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private float timeBetweenSpawns = 0.2f;
     [SerializeField] private float timeBetweenWaves = 1f;
+    [SerializeField] private int maxPerType = 10;
+
+    private Dictionary<EnemyController, int> typeByEnemy = new Dictionary<EnemyController, int>();
+    private Dictionary<int, int> createdCount = new Dictionary<int, int>();
 
     GameManager gameManager;
 
@@ -51,42 +55,58 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator SpawnWave(int waveCount)
     {
         enemySpawnComplite = false;
+
+        // 웨이브 시작: 동시 존재 카운트 초기화
+        createdCount.Clear();
+
         yield return new WaitForSeconds(timeBetweenWaves);
-        for (int i = 0; i < waveCount; i++)
+
+        // 종류별로 maxPerType(기본 10)까지 스폰
+        for (int type = 0; type < enemyPrefabs.Count; type++)
         {
-            yield return new WaitForSeconds(timeBetweenSpawns);
-            SpawnRandomEnemy();
+            int already = 0;
+            createdCount.TryGetValue(type, out already);
+            int toSpawn = Mathf.Max(0, maxPerType - already);
+
+            for (int i = 0; i < toSpawn; i++)
+            {
+                bool ok = SpawnEnemyOfType(type);
+
+                if (timeBetweenSpawns > 0f)
+                    yield return new WaitForSeconds(timeBetweenSpawns);
+
+                if (!ok) break;
+            }
         }
 
         enemySpawnComplite = true;
     }
 
-    private void SpawnRandomEnemy()
+    private bool SpawnEnemyOfType(int prefabIndex)
     {
-        if (enemyPrefabs.Count == 0 || spawnAreas.Count == 0)
-        {
-            Debug.LogWarning("Enemy Prefabs 또는 Spawn Areas가 설정되지 않았습니다.");
-            return;
-        }
+        int alive = 0;
+        createdCount.TryGetValue(prefabIndex, out alive);
+        if (alive >= maxPerType) return false; // 이 종류는 동시에 10마리까지
 
-        // 랜덤한 적 프리팹 선택
-        GameObject randomPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+        // 랜덤 스폰 위치
+        Rect area = spawnAreas[Random.Range(0, spawnAreas.Count)];
+        Vector2 pos = new Vector2(Random.Range(area.xMin, area.xMax), Random.Range(area.yMin, area.yMax));
 
-        // 랜덤한 영역 선택
-        Rect randomArea = spawnAreas[Random.Range(0, spawnAreas.Count)];
+        // 생성 및 초기화
+        GameObject origin = enemyPrefabs[prefabIndex];
+        GameObject spawned = Instantiate(origin, (Vector3)pos, Quaternion.identity);
 
-        // Rect 영역 내부의 랜덤 위치 계산
-        Vector2 randomPosition = new Vector2(
-            Random.Range(randomArea.xMin, randomArea.xMax),
-            Random.Range(randomArea.yMin, randomArea.yMax)
-        );
+        EnemyController ec = spawned.GetComponent<EnemyController>();
+        ec.Init(this, gameManager.player.transform);
 
-        // 적 생성 및 리스트에 추가
-        GameObject spawnedEnemy = Instantiate(randomPrefab, new Vector3(randomPosition.x, randomPosition.y), Quaternion.identity);
-        EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
-        enemyController.Init(this, gameManager.player.transform);
+        // 현재 생존 카운트/매핑 갱신
+        if (!createdCount.ContainsKey(prefabIndex)) createdCount[prefabIndex] = 0;
+        createdCount[prefabIndex]++;
 
-        activeEnemies.Add(enemyController);
+        typeByEnemy[ec] = prefabIndex;   // ← 나중에 죽을 때 감소시키기 위한 매핑
+
+        activeEnemies.Add(ec);
+        return true;
     }
 
     // 기즈모를 그려 영역을 시각화 (선택된 경우에만 표시)
@@ -106,6 +126,18 @@ public class EnemyManager : MonoBehaviour
     public void RemoveEnemyOnDeath(EnemyController enemy)
     {
         activeEnemies.Remove(enemy);
+
+        // 이 적의 타입을 찾아 현재 생존 수 감소
+        int typeIndex;
+        if (typeByEnemy.TryGetValue(enemy, out typeIndex))
+        {
+            int alive;
+            if (createdCount.TryGetValue(typeIndex, out alive) && alive > 0)
+                createdCount[typeIndex] = alive - 1;
+
+            typeByEnemy.Remove(enemy);
+        }
+
         if (enemySpawnComplite && activeEnemies.Count == 0)
             gameManager.EndOfWave();
     }

@@ -51,12 +51,9 @@ public class ItemRecord
     public int Status;
 }
 
-/* ---------- 루트 래퍼: 다양한 키 이름 모두 수용 ---------- */
-
 [Serializable]
 public class MonsterTable
 {
-    // 흔한 패턴들
     public List<MonsterRecord> items;
     public List<MonsterRecord> Items;
     public List<MonsterRecord> monster;

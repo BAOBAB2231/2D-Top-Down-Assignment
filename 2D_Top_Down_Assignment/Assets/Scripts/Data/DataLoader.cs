@@ -6,9 +6,6 @@ using UnityEngine;
 
 public static class DataLoader
 {
-    /// <summary>
-    /// 루트가 배열([])이면 {"items": ...} 로 감싸 JsonUtility가 파싱 가능하게 만든다.
-    /// </summary>
     private static string WrapIfArray(string raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return "{\"items\":[]}";
@@ -17,10 +14,6 @@ public static class DataLoader
         return raw;
     }
 
-    /// <summary>
-    /// 특정 키(예: "Monster", "Item") 뒤에 오는 최상위 배열을 찾아 {"items":[...]}로 감싼다.
-    /// JSON 구조가 { "Monster":[ ... ] } 처럼 객체 루트인 경우에 사용.
-    /// </summary>
     private static string ExtractArrayAndWrap(string raw, params string[] keys)
     {
         if (string.IsNullOrWhiteSpace(raw)) return "{\"items\":[]}";
