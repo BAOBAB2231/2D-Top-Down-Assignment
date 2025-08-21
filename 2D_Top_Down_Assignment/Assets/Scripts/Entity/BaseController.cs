@@ -127,4 +127,27 @@ public class BaseController : MonoBehaviour
             weaponHandler?.Attack();
         }
     }
+
+    public virtual void Death()
+    {
+        // 움직임 정지
+        _rigidbody.linearVelocity = Vector3.zero;
+
+        // 모든 SpriteRenderer의 투명도 낮춰서 죽은 효과 연출
+        foreach (SpriteRenderer renderer in transform.GetComponentsInChildren<SpriteRenderer>())
+        {
+            Color color = renderer.color;
+            color.a = 0.3f;
+            renderer.color = color;
+        }
+
+        // 모든 컴포넌트(스크립트 포함) 비활성화
+        foreach (Behaviour component in transform.GetComponentsInChildren<Behaviour>())
+        {
+            component.enabled = false;
+        }
+
+        // 2초 후 오브젝트 파괴
+        Destroy(gameObject, 2f);
+    }
 }
